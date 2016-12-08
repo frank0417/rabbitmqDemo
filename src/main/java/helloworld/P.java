@@ -29,7 +29,7 @@ public class P {
 		channel.queueDeclare(QUEUE_NAME, false, false, false, null);
 		String message="Hello World!";
 		//发送消息到队列中
-		//交换发布消息、路由key、消息的其他属性 - 路由头等、消息体
+		//交换器（""使用了默认匿名交换器）、路由key、消息的其他属性 - 路由头等、消息体
 		channel.basicPublish("", QUEUE_NAME, null,message.getBytes("UTF-8"));
 		System.out.println("P [x] Sent '"+message+"'");
 		// 关闭频道和连接

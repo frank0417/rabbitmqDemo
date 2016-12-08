@@ -26,7 +26,7 @@ public class NewTask {
 		// 分发消息
 		for(int i=0;i<5;i++){
 			String message="Hello World! "+i;
-			//交换发布消息、路由key、消息的其他属性 - 路由头等、消息体
+			//交换器（""使用了默认匿名交换器）、路由key、消息的其他属性 - 路由头等、消息体
 			channel.basicPublish("", TASK_QUEUE_NAME, MessageProperties.PERSISTENT_TEXT_PLAIN, message.getBytes());
 			System.out.println("[x] Send '"+message+"'");
 		}
