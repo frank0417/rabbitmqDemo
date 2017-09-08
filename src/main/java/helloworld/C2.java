@@ -1,7 +1,6 @@
 package helloworld;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.concurrent.TimeoutException;
 
 import com.rabbitmq.client.AMQP;
@@ -13,11 +12,11 @@ import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 
 /**
- * 消息消费者，收到消息自动应答
+ * 消息消费者，收到消息手动应答
  * @author chen_miao
  *
  */
-public class C {
+public class C2 {
 	private final static String QUEUE_NAME="hello";
 	
 	public static void main(String[] args) throws IOException, TimeoutException {
@@ -36,13 +35,14 @@ public class C {
 		// DefaultConsumer类实现了Consumer接口，通过传入一个频道，告诉服务器我们需要那个频道的消息，如果频道中有消息，就会执行回调函数handleDelivery
 		Consumer consumer=new DefaultConsumer(channel){
 			@Override
-			public void handleDelivery(String consumerTag,Envelope envelope,AMQP.BasicProperties properties,byte[] body) throws UnsupportedEncodingException{
+			public void handleDelivery(String consumerTag,Envelope envelope,AMQP.BasicProperties properties,byte[] body) throws IOException{
 				String message=new String(body,"UTF-8");
 				System.out.println("C [x] Received '"+message+"'");
+				getChannel().basicAck(envelope.getDeliveryTag(), false);
 			}
 		};
 		// 自动回复队列应答 -- RabbitMQ中的消息确认机制
 		// 队列名称，自动应答，回调
-		channel.basicConsume(QUEUE_NAME, true,consumer);
+		channel.basicConsume(QUEUE_NAME, false,consumer);
 	}
 }
